@@ -1,17 +1,10 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
 import Header from "../components/Header";
 import { Ionicons } from "@expo/vector-icons";
-import { auth, db } from "../Firebase";
+import { auth } from "../Firebase";
 import { StatusBar } from "expo-status-bar";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { onValue, ref } from "firebase/database";
 
 export default function Welcome({ navigation }) {
   useEffect(() => {

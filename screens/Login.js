@@ -8,9 +8,8 @@ import {
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import { Ionicons } from "@expo/vector-icons";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { auth, provider } from "../Firebase";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../Firebase";
 import { StatusBar } from "expo-status-bar";
 
 export default function Login({ navigation }) {
@@ -44,9 +43,6 @@ export default function Login({ navigation }) {
       });
   };
 
-  const googleLogin = () => {
-    signInWithRedirect(auth, provider);
-  };
   return (
     <SafeAreaView className="bg-purple-600 flex-1">
       <StatusBar style="light" />

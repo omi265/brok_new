@@ -3,17 +3,18 @@ import {
   Text,
   SafeAreaView,
   TouchableOpacity,
-  TextInput,
   Alert,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import React, { useLayoutEffect, useState, useEffect } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import Header from "../components/Header";
 import { Ionicons } from "@expo/vector-icons";
 import Dropdown from "../components/Dropdown";
 import { StatusBar } from "expo-status-bar";
 import { auth, db } from "../Firebase";
 import { onValue, ref, update } from "firebase/database";
+import dbData from "../components/dbData";
+
+let data = {};
 
 export default function SplittingScreen({ navigation }) {
   const [savings, setSavings] = useState(null);
@@ -22,14 +23,11 @@ export default function SplittingScreen({ navigation }) {
 
   useLayoutEffect(() => {
     // setName(route.params.name);
-    const userDetails = ref(db, "users/" + auth.currentUser.uid);
-    onValue(userDetails, (snapshot) => {
-      const data = snapshot.val();
+    data = dbData();
 
-      if (data.split.savings != 0) {
-        navigation.navigate("AddExpense");
-      }
-    });
+    if (data.split.savings != 0) {
+      navigation.navigate("AddExpense");
+    }
   }, []);
 
   const pressHandler = () => {

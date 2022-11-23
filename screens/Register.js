@@ -5,7 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Header from "../components/Header";
 import { Ionicons } from "@expo/vector-icons";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
@@ -17,30 +17,6 @@ export default function Register({ navigation }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  useEffect(() => {
-    // const unsubscribe = auth.onAuthStateChanged((authUser) => {
-    //   if (authUser) {
-    //     console.log(auth.currentUser.displayName);
-    //     let data = {};
-    //     const userDetails = ref(db, "users/" + auth.currentUser.uid);
-    //     onValue(userDetails, (snapshot) => {
-    //       data = snapshot.val();
-    //     });
-    //     console.log(data);
-    //     if (data.budget == 0) {
-    //       navigation.navigate("Home", {
-    //         name: user.displayName,
-    //       });
-    //     } else if (data.split.savings == 0) {
-    //       navigation.replace("Split");
-    //     } else {
-    //       navigation.replace("AddExpense");
-    //     }
-    //   }
-    // });
-    // return unsubscribe;
-  }, []);
 
   const register = () => {
     // const auth = getAuth();

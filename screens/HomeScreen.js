@@ -8,64 +8,35 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Header from "../components/Header";
 import { auth, db } from "../Firebase";
-import { getDatabase, ref, onValue, update } from "firebase/database";
+import { ref, update } from "firebase/database";
+import dbData from "../components/dbData";
+
+let data = {};
 
 export default function HomeScreen({ navigation, route }) {
   const [name, setName] = useState("");
   const [budget, setBudget] = useState(0);
-  // setName(route.params.name);
-  // console.log(route.params);
-
-  // useEffect(() => {
-  //   // const unsubscribe = auth.onAuthStateChanged((authUser) => {
-  //   //   if (authUser) {
-  //   //     console.log(auth.currentUser.displayName);
-  //   //     let data = {};
-  //   //     const userDetails = ref(db, "users/" + auth.currentUser.uid);
-  //   //     onValue(userDetails, (snapshot) => {
-  //   //       data = snapshot.val();
-  //   //     });
-  //   //     console.log(data);
-  //   //     if (data.budget == 0) {
-  //   //       navigation.replace("Home");
-  //   //     } else if (data.split.savings == 0) {
-  //   //       navigation.replace("Split");
-  //   //     } else {
-  //   //       navigation.replace("AddExpense");
-  //   //     }
-  //   //   }
-  //   // });
-  //   // return unsubscribe;
-  // }, []);
 
   useLayoutEffect(() => {
-    // setName(route.params.name);
-    const userDetails = ref(db, "users/" + auth.currentUser.uid);
-    onValue(userDetails, (snapshot) => {
-      const data = snapshot.val();
-
-      console.log(data);
-      setName(data.name);
-      if (data.budget != 0) {
-        if (data.split.savings != 0) {
-          navigation.navigate("AddExpense");
-        }
-        navigation.navigate("Split");
+    data = dbData();
+    console.log(data);
+    setName(data.name);
+    if (data.budget != 0) {
+      if (data.split.savings != 0) {
+        navigation.navigate("AddExpense");
       }
-    });
+      navigation.navigate("Split");
+    }
   }, []);
 
   const pressHandler = () => {
     let data = {};
-    const userDetails = ref(db, "users/" + auth.currentUser.uid);
-    onValue(userDetails, (snapshot) => {
-      data = snapshot.val();
-    });
-    console.log(data);
+    data = dbData();
+    // console.log(data);
 
     if (data.budget != 0) {
       Alert.alert("Oops !", "Your Budget already exists", [
@@ -89,7 +60,6 @@ export default function HomeScreen({ navigation, route }) {
   return (
     <SafeAreaView className="bg-purple-600 flex-1">
       <StatusBar style="light" />
-
       <Header />
       <View className="justify-center flex-1 pl-4 flex">
         <Text className="font-bold text-purple-300 text-6xl p-4">

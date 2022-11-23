@@ -1,6 +1,4 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useEffect } from "react";
-import { Text, View } from "react-native";
+import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./screens/HomeScreen";
@@ -9,7 +7,6 @@ import AddExpense from "./screens/AddExpense";
 import Welcome from "./screens/Welcome";
 import Login from "./screens/Login";
 import Register from "./screens/Register";
-import { auth } from "./Firebase";
 import { LogBox } from "react-native";
 
 const Stack = createNativeStackNavigator();

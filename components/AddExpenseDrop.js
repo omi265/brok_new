@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Text } from "react-native";
+import React from "react";
 import { SelectList } from "react-native-dropdown-select-list";
 
 export default function AddExpenseDrop({ setValue, name }) {

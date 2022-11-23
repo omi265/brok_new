@@ -1,13 +1,5 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  StatusBar,
-  Image,
-  SafeAreaView,
-} from "react-native";
+import { View, Text, StyleSheet, StatusBar, SafeAreaView } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
 import { auth } from "../Firebase";
 
 export default function Header() {

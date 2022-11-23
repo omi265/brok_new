@@ -1,9 +1,8 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   FlatList,
   SafeAreaView,
-  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -13,9 +12,10 @@ import { StatusBar } from "expo-status-bar";
 import Header from "../components/Header";
 import { Ionicons } from "@expo/vector-icons";
 import AddExpenseDrop from "../components/AddExpenseDrop";
-import { child, onValue, push, ref, update } from "firebase/database";
+import { child, push, ref, update } from "firebase/database";
 import { auth, db } from "../Firebase";
 import ExpenseItem from "../components/ExpenseItem";
+import dbData from "../components/dbData";
 
 export default function AddExpense({ navigation }) {
   const [title, setTitle] = useState("");
@@ -28,7 +28,7 @@ export default function AddExpense({ navigation }) {
 
   const updateSpend = (title, value, from, key) => {
     setSpends((prevSpends) => {
-      console.log(prevSpends);
+      // console.log(prevSpends);
       return [
         {
           title: title,
@@ -43,14 +43,8 @@ export default function AddExpense({ navigation }) {
 
   const deleteHandler = (key) => {
     console.log(key);
-    const userDetails = ref(
-      db,
-      "users/" + auth.currentUser.uid + "/spendList/" + key
-    );
-    onValue(userDetails, (snapshot) => {
-      data = snapshot.val();
-    });
-    console.log(data.title);
+    data = dbData();
+    console.log(data.spendList[key].title);
     const updates = {};
     updates["users/" + auth.currentUser.uid + "/spendList/" + key] = null;
     update(ref(db), updates);
@@ -61,18 +55,10 @@ export default function AddExpense({ navigation }) {
   };
 
   useEffect(() => {
-    // setName(route.params.name);
-    const userDetails = ref(db, "users/" + auth.currentUser.uid);
-    onValue(userDetails, (snapshot) => {
-      data = snapshot.val();
+    data = dbData();
 
-      console.log(data.spendList);
-      //
-    });
     if (count == false) {
-      console.log("AA GAYA");
       for (let i in data.spendList) {
-        console.log(data.spendList[i].title);
         updateSpend(
           data.spendList[i].title,
           data.spendList[i].value,
@@ -83,25 +69,12 @@ export default function AddExpense({ navigation }) {
     }
 
     setCount(true);
-    console.log(count);
   }, [count]);
 
   const pressHandler = () => {
-    console.log(spends);
-    console.log(count);
-
-    console.log("Added");
-    let data = {};
-    const userDetails = ref(db, "users/" + auth.currentUser.uid);
-    onValue(userDetails, (snapshot) => {
-      data = snapshot.val();
-    });
-    // console.log(data.name);
-
     const newExpenseKey = push(
       child(ref(db), "users/" + auth.currentUser.uid + "/spendList")
     ).key;
-    console.log(newExpenseKey);
 
     const newExpense = {
       key: newExpenseKey,
@@ -121,7 +94,6 @@ export default function AddExpense({ navigation }) {
         newExpense;
 
       update(ref(db), updates).then(() => {
-        console.log("Ho gaya");
         updateSpend(title, value, place, newExpenseKey);
       });
     }
