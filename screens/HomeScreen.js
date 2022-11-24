@@ -8,30 +8,48 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Header from "../components/Header";
 import { auth, db } from "../Firebase";
-import { ref, update } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  update,
+  get,
+  child,
+} from "firebase/database";
 import dbData from "../components/dbData";
 
 let data = {};
+let savings = 0;
 
 export default function HomeScreen({ navigation, route }) {
   const [name, setName] = useState("");
   const [budget, setBudget] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  useLayoutEffect(() => {
-    data = dbData();
-    console.log(data);
-    setName(data.name);
-    if (data.budget != 0) {
-      if (data.split.savings != 0) {
-        navigation.navigate("AddExpense");
+  useEffect(() => {
+    const dbRef = ref(db);
+    get(child(dbRef, "users/" + auth.currentUser.uid)).then((snapshot) => {
+      console.log(snapshot.val());
+      data = snapshot.val();
+      setName(data.name);
+      if (data.budget != 0) {
+        navigation.navigate("Split");
       }
-      navigation.navigate("Split");
-    }
-  }, []);
+    });
+    // const userDetails = ref(db, "users/" + auth.currentUser.uid);
+    // onValue(userDetails, (snapshot) => {
+    //   const data = snapshot.val();
+    //   setName(data.name);
+    //   if (data.budget != 0) {
+    //     navigation.navigate("Split");
+    //   }
+    // });
+    // console.log(data);
+  }, [data]);
 
   const pressHandler = () => {
     let data = {};
@@ -52,7 +70,9 @@ export default function HomeScreen({ navigation, route }) {
       updates["users/" + auth.currentUser.uid + "/budget"] = budget;
       update(ref(db), updates).then(() => {
         console.log("Ho gaya");
-        navigation.navigate("Split");
+        navigation.navigate("Split", {
+          savings: data.split.savings,
+        });
       });
     }
   };
@@ -79,7 +99,7 @@ export default function HomeScreen({ navigation, route }) {
         </View>
       </View>
       <View className="items-end p-10">
-        <TouchableOpacity onPress={() => pressHandler()}>
+        <TouchableOpacity onPress={pressHandler}>
           <Ionicons name="arrow-forward" size={40} color="white" />
         </TouchableOpacity>
       </View>

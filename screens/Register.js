@@ -32,22 +32,12 @@ export default function Register({ navigation }) {
           name: name,
           email: email,
           budget: 0,
+          spent: 0,
           split: {
             savings: 0,
             expense: 0,
             luxury: 0,
           },
-          spent: {
-            savings: 0,
-            expense: 0,
-            luxury: 0,
-          },
-          remaining: {
-            savings: 0,
-            expense: 0,
-            luxury: 0,
-          },
-          spends: {},
         });
         navigation.navigate("Home", {
           name: name,
@@ -55,7 +45,6 @@ export default function Register({ navigation }) {
         // ...
       })
       .catch((error) => {
-        const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorMessage);
         alert(errorMessage);

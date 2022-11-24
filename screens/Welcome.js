@@ -12,7 +12,9 @@ export default function Welcome({ navigation }) {
       if (user) {
         const uid = user.uid;
         console.log("User Exists");
-        navigation.navigate("Home");
+        navigation.navigate("Home", {
+          name: auth.currentUser.displayName,
+        });
       }
     });
   }, []);

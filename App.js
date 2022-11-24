@@ -8,6 +8,7 @@ import Welcome from "./screens/Welcome";
 import Login from "./screens/Login";
 import Register from "./screens/Register";
 import { LogBox } from "react-native";
+import PersonStatus from "./screens/PersonStatus";
 
 const Stack = createNativeStackNavigator();
 
@@ -47,6 +48,11 @@ export default function App() {
           name="Register"
           options={{ headerShown: false }}
           component={Register}
+        />
+        <Stack.Screen
+          name="Person"
+          options={{ headerShown: false }}
+          component={PersonStatus}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -5,29 +5,31 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import Header from "../components/Header";
 import { Ionicons } from "@expo/vector-icons";
 import Dropdown from "../components/Dropdown";
 import { StatusBar } from "expo-status-bar";
 import { auth, db } from "../Firebase";
-import { onValue, ref, update } from "firebase/database";
+import { child, get, onValue, ref, update } from "firebase/database";
 import dbData from "../components/dbData";
 
 let data = {};
 
-export default function SplittingScreen({ navigation }) {
+export default function SplittingScreen({ navigation, route }) {
   const [savings, setSavings] = useState(null);
   const [expense, setExpense] = useState(null);
   const [luxury, setLuxury] = useState(null);
 
-  useLayoutEffect(() => {
-    // setName(route.params.name);
-    data = dbData();
-
-    if (data.split.savings != 0) {
-      navigation.navigate("AddExpense");
-    }
+  useEffect(() => {
+    const dbRef = ref(db);
+    get(child(dbRef, "users/" + auth.currentUser.uid)).then((snapshot) => {
+      console.log(snapshot.val());
+      data = snapshot.val();
+      if (data.split.savings != 0) {
+        navigation.navigate("AddExpense");
+      }
+    });
   }, []);
 
   const pressHandler = () => {
@@ -41,13 +43,8 @@ export default function SplittingScreen({ navigation }) {
     temp_luxury = parseFloat(temp_luxury.replace("%", ""));
 
     total = temp_savings + temp_expense + temp_luxury;
-    console.log(total);
 
-    let data = {};
-    const userDetails = ref(db, "users/" + auth.currentUser.uid);
-    onValue(userDetails, (snapshot) => {
-      data = snapshot.val();
-    });
+    console.log(total);
     if (data.split.savings != 0) {
       Alert.alert("Oops !", "Your Splits already exist", [
         { text: "Understood", onPress: () => console.log("alert closed") },
@@ -62,6 +59,11 @@ export default function SplittingScreen({ navigation }) {
         { text: "Understood", onPress: () => console.log("alert closed") },
       ]);
     } else {
+      let data = dbData();
+
+      temp_savings = (temp_savings / 100) * data.budget;
+      temp_expense = (temp_expense / 100) * data.budget;
+      temp_luxury = (temp_luxury / 100) * data.budget;
       console.log(expense);
       const updates = {};
 
